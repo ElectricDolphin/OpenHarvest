@@ -5,8 +5,7 @@ public class QuestGettingBronzeForTheOldy : QuestOption
 {
     private int minimumNumberOfBronzeOres = 20;
     public QuestDialogueController questDialogueController;
-
-    private string RewardItemId = "HatMiner";
+    public HarvestDataTypes.Item rewardItem; 
 
     void Start() 
     {
@@ -17,9 +16,9 @@ public class QuestGettingBronzeForTheOldy : QuestOption
 
     private void handleNPCGaveItem(object sender, Grabbable grabbable)
     {
-        var itemInfo = grabbable.GetComponent<ItemInformation>();
+        var item = Definitions.GetItemFromObject(grabbable);
 
-        if (!itemInfo || itemInfo.getItemId() != RewardItemId)
+        if (!item || item.itemId != rewardItem.itemId)
         {
             return;
         }
@@ -30,9 +29,10 @@ public class QuestGettingBronzeForTheOldy : QuestOption
 
     private void handleNPCGrabbedItem(object sender, Grabbable grabbable)
     {
-        if (GameState.questList[questId].currentDialogue == 1)
+        if (GameState.Instance.questList[questId].currentDialogue == 1)
         {
-            if (grabbable.GetComponent<ItemInformation>().getItemId() != "OreBronze")
+            var item = Definitions.GetItemFromObject(grabbable);
+            if (item.itemId != "OreBronze")
             {
                 return;
             }
@@ -78,20 +78,20 @@ public class QuestGettingBronzeForTheOldy : QuestOption
 
     public void CheckStatus()
     {
-        if (GameState.questList[questId].currentProgress != Progress.InProgress)
+        if (GameState.Instance.questList[questId].currentProgress != Progress.InProgress)
         {
             return;
         }
 
-        if(GameState.questList[questId].currentDialogue == 1)
+        if(GameState.Instance.questList[questId].currentDialogue == 1)
         {
             npc.HoldOutHand();
         }
 
-        if (GameState.questList[questId].currentDialogue == 2)
+        if (GameState.Instance.questList[questId].currentDialogue == 2)
         {
             npc.HoldOutHand();
-            npc.SpawnQuestReward(RewardItemId);
+            npc.SpawnQuestReward(rewardItem);
         }
     }
 
@@ -100,6 +100,6 @@ public class QuestGettingBronzeForTheOldy : QuestOption
         GeneralQuestController.Instance.UpdateQuest();
         questDialogueController.SetCurrentQuestDialog(2);
 
-        npc.SpawnQuestReward(RewardItemId);
+        npc.SpawnQuestReward(rewardItem);
     }
 }

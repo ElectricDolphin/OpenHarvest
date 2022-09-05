@@ -1,16 +1,15 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using static Definitions;
 
 public class ItemRow : MonoBehaviour
 {
     public Text buttonLabel;
     public Button button;
 
-    private Item item;
+    private HarvestDataTypes.Item item;
     private StoreItemsLister storeItemsLister;
 
-    public void SetItem(Item item)
+    public void SetItem(HarvestDataTypes.Item item)
     {
         this.item = item;
         RefreshButton();
@@ -20,13 +19,13 @@ public class ItemRow : MonoBehaviour
     {
         button.interactable = true;
 
-        if (item.DependsOnBeforeBuying != "" && !GameState.isUnlocked(item.DependsOnBeforeBuying))
+        if (item.DependsOnBeforeBuyingItem != null && !GameState.Instance.isUnlocked(item.DependsOnBeforeBuyingItem.itemId))
         {
-            setButtonToDependsOnOtherItem(item.DependsOnBeforeBuying);
+            setButtonToDependsOnOtherItem(item.DependsOnBeforeBuyingItem);
             return;
         }
 
-        if (GameState.isUnlocked(item.itemId) && GameState.ownsMaximumNumber(item))
+        if (GameState.Instance.isUnlocked(item.itemId) && GameState.Instance.ownsMaximumNumber(item))
         {
             buttonLabel.text = "Maximum owned amount of item reached";
             return;
@@ -41,15 +40,14 @@ public class ItemRow : MonoBehaviour
         buttonLabel.text = "Buy (" + item.buyPrice + ")";
     }
 
-    private void setButtonToDependsOnOtherItem(string itemId)
+    private void setButtonToDependsOnOtherItem(HarvestDataTypes.Item item)
     {
-        Item itemInfo = GetItemInformation(itemId);
-        buttonLabel.text = "Buy " + itemInfo.name + " first!";
+        buttonLabel.text = "Buy " + item.name + " first!";
     }
 
     private bool hasEnoughMoney()
     {
-        return (GameState.getTotalAmount() - item.buyPrice) >= 0;
+        return (GameState.Instance.getTotalAmount() - item.buyPrice) >= 0;
     }
 
     public void GoToDetailPage()
@@ -78,7 +76,7 @@ public class ItemRow : MonoBehaviour
         storeItemsLister = newStoreItemsLister;
     }
 
-    public void LockStoreItem(Item currentBoughtItem)
+    public void LockStoreItem(HarvestDataTypes.Item currentBoughtItem)
     {
         if (item == currentBoughtItem)
         {

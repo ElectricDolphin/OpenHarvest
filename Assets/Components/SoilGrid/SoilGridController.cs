@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class SoilGridController : MonoBehaviour
 {
@@ -10,11 +11,12 @@ public class SoilGridController : MonoBehaviour
 
     void Start()
     {
+        SceneSwitcher.Instance.beforeSceneSwitch += beforeSceneSwitch;
         farmSoilGrid = GetComponent<Transform>();
         if(patchLocation == "greenhouse")
         {
             // It's a dirty hack I know.
-            patchLocation = GameState.enteredSceneThrough;
+            patchLocation = GameState.Instance.enteredSceneThrough;
         }
 
         LoadGrid();
@@ -22,7 +24,7 @@ public class SoilGridController : MonoBehaviour
 
     public void LoadGrid()
     {
-        patches = GameState.soilGrids[patchLocation];
+        patches = GameState.Instance.soilGrids[patchLocation];
 
         for (int i = 0; i < patches.Count; i++)
         {
@@ -93,6 +95,12 @@ public class SoilGridController : MonoBehaviour
             i++;
         }
 
-        GameState.soilGrids[patchLocation] = patches;
+        GameState.Instance.soilGrids[patchLocation] = patches;
+    }
+
+    protected void beforeSceneSwitch(object sender, EventArgs e)
+    {
+        SceneSwitcher.Instance.beforeSceneSwitch -= beforeSceneSwitch;
+        UpdateSaveableGrid();
     }
 }

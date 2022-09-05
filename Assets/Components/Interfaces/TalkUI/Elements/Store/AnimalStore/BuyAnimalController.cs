@@ -1,23 +1,22 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using static Definitions;
 
 public class BuyAnimalController : MonoBehaviour
 {
     public Text buttonLabel;
     public Button button;
-    public Item item;
+    public HarvestDataTypes.Item item;
 
     private StoreItemsLister storeItemsLister;
 
-    public void SetItem(Item item)
+    public void SetItem(HarvestDataTypes.Item item)
     {
         button.interactable = true;
         this.item = item;
 
-        if (item.DependsOnBeforeBuying != "" && !GameState.isUnlocked(item.DependsOnBeforeBuying))
+        if (item.DependsOnBeforeBuyingItem != null && !GameState.Instance.isUnlocked(item.DependsOnBeforeBuyingItem.itemId))
         {
-            setButtonToDependsOnOtherItem(item.DependsOnBeforeBuying);
+            setButtonToDependsOnOtherItem(item.DependsOnBeforeBuyingItem);
             return;
         }
 
@@ -60,21 +59,19 @@ public class BuyAnimalController : MonoBehaviour
             return false;
         }
 
-        return GameState.unlockables[item.itemId] >= item.maximumTimesOwned;
+        return GameState.Instance.unlockables[item.itemId] >= item.maximumTimesOwned;
     }
 
     private bool isAlreadyUnlocked()
     {
-        return GameState.isUnlocked(item.itemId);
+        return GameState.Instance.isUnlocked(item.itemId);
     }
 
-    private void setButtonToDependsOnOtherItem(string itemId)
+    private void setButtonToDependsOnOtherItem(HarvestDataTypes.Item item)
     {
-        Item itemInfo = GetItemInformation(itemId);
-
         button.interactable = false;
         var newText = buttonLabel;
-        newText.text = "Buy " + itemInfo.name + " first!";
+        newText.text = "Buy " + item.name + " first!";
     }
 
     private void setButtonToAlreadyBought()
@@ -93,7 +90,7 @@ public class BuyAnimalController : MonoBehaviour
 
     private bool hasEnoughMoney()
     {
-        return (GameState.getTotalAmount() - item.buyPrice) >= 0;
+        return (GameState.Instance.getTotalAmount() - item.buyPrice) >= 0;
     }
 
     private void setButtonPrice()
@@ -122,7 +119,7 @@ public class BuyAnimalController : MonoBehaviour
         storeItemsLister = newStoreItemsLister;
     }
 
-    public void LockStoreItem(Item currentBoughtItem)
+    public void LockStoreItem(HarvestDataTypes.Item currentBoughtItem)
     {
         if (item == currentBoughtItem)
         {

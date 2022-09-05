@@ -4,12 +4,10 @@ using UnityEngine;
 public class QuestSantasLittleHelper : QuestOption
 {
     public int minimumNeededHangedBaubleCount = 2;
+
     public QuestDialogueController questDialogueController;
-
     public Transform baubleHangingLocations;
-
-    private string RewardItemId = "HatSanta";
-
+    public HarvestDataTypes.Item rewardItem; 
 
     void Start()
     {
@@ -19,7 +17,7 @@ public class QuestSantasLittleHelper : QuestOption
 
     public void CheckStatus( )
     {
-        if (GameState.questList[questId].currentProgress != Progress.InProgress)
+        if (GameState.Instance.questList[questId].currentProgress != Progress.InProgress)
         {
             return;
         }
@@ -57,6 +55,6 @@ public class QuestSantasLittleHelper : QuestOption
         GeneralQuestController.Instance.UpdateQuest();
         questDialogueController.SetCurrentQuestDialog(2);
 
-        npc.SpawnQuestReward(RewardItemId);
+        npc.SpawnQuestReward(rewardItem);
     }
 }

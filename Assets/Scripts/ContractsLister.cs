@@ -30,7 +30,7 @@ public class ContractsLister : MonoBehaviour
 
     public void RefreshStore()
     {
-        fillStore(GameState.contractsOfTheWeek.currentContracts);
+        fillStore(GameState.Instance.contractsOfTheWeek.currentContracts);
     }
 
     public void RefreshStoreRows()
@@ -42,7 +42,7 @@ public class ContractsLister : MonoBehaviour
         }
     }
 
-    public void LockStore(Item currentBoughtItem)
+    public void LockStore(HarvestDataTypes.Item currentBoughtItem)
     {
         foreach (Transform item in scrollViewContent)
         {

@@ -15,7 +15,6 @@ This repository contains a lot of packages that could not be included. You will 
 | VR Interaction Framework | BNG Framework | 1.81 | https://assetstore.unity.com/packages/templates/systems/vr-interaction-framework-161066 |
 | Shader Pack : Cartoon Water | ZerinLabs_shaderPack_CartoonWater | 1.1 | https://assetstore.unity.com/packages/vfx/shaders/shader-pack-cartoon-water-178978 |
 | Oculus Integration | Oculus | 38.0 | https://assetstore.unity.com/packages/tools/integration/oculus-integration-82022 |
-| Hierarchy Folders | Sisus| 1.2.6 | https://assetstore.unity.com/packages/tools/utilities/hierarchy-folders-157716 |
 
 Put these in the "Assets/External” Folder.
 
@@ -28,15 +27,13 @@ https://github.com/Oculus-VR/Unity-Graphics/tree/2020.3/oculus-app-spacewarp
 2021 branch can be found here:
 https://github.com/Oculus-VR/Unity-Graphics/tree/2021.2/oculus-app-spacewarp
 
-# Running on Windows
+# Platforms
+
+Open Harvest can build for Windows & Android.
+
+## Running on Windows
 The game DOES NOT RUN ON WINDOWS WITH APPLICATION SPACEWARP ENABLED. Make sure to disable it during development.
 `Edit > Project Settings > XR Plug-in Management > Oculus > Android > Experimental > Application Spacewarp >` uncheck the box. (Dont forget to recheck it before commiting)
-
-# Building for Android
-When you build for android it's gonna give an error about a missing keystore. You will have to readd it manually in the settings.
-`Edit > Project Settings > Player > Publishing Settings > Project keystore > select` (It's located under `Assets > keystore > harvest_vr.keystore`)
-`Edit > Project Settings > Player > Publishing Settings > Project keystore > password` (It's located under `Assets > keystore > keystore_password`)
-`Edit > Project Settings > Player > Publishing Settings > Project key > password `(It's located under `Assets > keystore > keystore_password`)
 
 # Harvest Settings
 

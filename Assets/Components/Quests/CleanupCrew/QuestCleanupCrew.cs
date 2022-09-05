@@ -5,9 +5,9 @@ public class QuestCleanupCrew : QuestOption
 {
     private int minimumNumberOfBottles = 10;
     private int minimumNumberOfCans = 15;
-    public QuestDialogueController questDialogueController;
 
-    private string RewardItemId = "HatRecycle";
+    public QuestDialogueController questDialogueController;
+    public HarvestDataTypes.Item rewardItem; 
 
     void Start()
     {
@@ -18,9 +18,9 @@ public class QuestCleanupCrew : QuestOption
 
     private void handleNPCGaveItem(object sender, Grabbable grabbable)
     {
-        var itemInfo = grabbable.GetComponent<ItemInformation>();
+        var item = Definitions.GetItemFromObject(grabbable);
 
-        if (!itemInfo || itemInfo.getItemId() != RewardItemId)
+        if (!item || item.itemId != rewardItem.itemId)
         {
             return;
         }
@@ -31,9 +31,10 @@ public class QuestCleanupCrew : QuestOption
 
     private void handleNPCGrabbedItem(object sender, Grabbable grabbable)
     {
-        if (GameState.questList[questId].currentDialogue == 1)
+        if (GameState.Instance.questList[questId].currentDialogue == 1)
         {
-            if (grabbable.GetComponent<ItemInformation>().getItemId() != "Bottle")
+            var item = Definitions.GetItemFromObject(grabbable);
+            if (item.itemId != "Bottle")
             {
                 return;
             }
@@ -62,9 +63,10 @@ public class QuestCleanupCrew : QuestOption
             return;
         }
 
-        if (GameState.questList[questId].currentDialogue == 2)
+        if (GameState.Instance.questList[questId].currentDialogue == 2)
         {
-            if (grabbable.GetComponent<ItemInformation>().getItemId() != "Can")
+            var item = Definitions.GetItemFromObject(grabbable);
+            if (item.itemId != "Can")
             {
                 return;
             }
@@ -110,25 +112,25 @@ public class QuestCleanupCrew : QuestOption
 
     public void CheckStatus()
     {
-        if (GameState.questList[questId].currentProgress != Progress.InProgress)
+        if (GameState.Instance.questList[questId].currentProgress != Progress.InProgress)
         {
             return;
         }
 
-        if (GameState.questList[questId].currentDialogue == 1)
+        if (GameState.Instance.questList[questId].currentDialogue == 1)
         {
             npc.HoldOutHand();
         }
 
-        if (GameState.questList[questId].currentDialogue == 2)
+        if (GameState.Instance.questList[questId].currentDialogue == 2)
         {
             npc.HoldOutHand();
         }
 
-        if (GameState.questList[questId].currentDialogue == 3)
+        if (GameState.Instance.questList[questId].currentDialogue == 3)
         {
             npc.HoldOutHand();
-            npc.SpawnQuestReward(RewardItemId);
+            npc.SpawnQuestReward(rewardItem);
         }
     }
 
@@ -137,6 +139,6 @@ public class QuestCleanupCrew : QuestOption
         GeneralQuestController.Instance.UpdateQuest();
         questDialogueController.SetCurrentQuestDialog(3);
 
-        npc.SpawnQuestReward(RewardItemId);
+        npc.SpawnQuestReward(rewardItem);
     }
 }

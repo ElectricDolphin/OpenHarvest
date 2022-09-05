@@ -1,10 +1,12 @@
 ﻿using BNG;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 using static Definitions;
 
 public class WindmillController : MonoBehaviour
 {
+    public HarvestDataTypes.Item flour;
     public SpawnManager spawnManager;
     public WheatHeightController wheatHeightController;
     public Text updateWheatCountLabel;
@@ -18,6 +20,7 @@ public class WindmillController : MonoBehaviour
 
     void Start()
     {
+        SceneSwitcher.Instance.beforeSceneSwitch += beforeSceneSwitch;
         LoadWindmill();
     }
 
@@ -56,7 +59,7 @@ public class WindmillController : MonoBehaviour
             return;
         }
 
-        GameObject item = InstantiateItem("Flour");
+        GameObject item = Definitions.InstantiateItemNew(flour.prefab);
         flourSnapZone.SetActive(true);
         snapZone.GrabGrabbable(item.GetComponent<Grabbable>());
         snapZone.HeldItem.GetComponent<ItemStack>().SetStackSize(currentWheatCount);
@@ -80,7 +83,7 @@ public class WindmillController : MonoBehaviour
 
     void LoadWindmill()
     {
-        SaveableWindmill windmill = GameState.windmill;
+        SaveableWindmill windmill = GameState.Instance.windmill;
 
         if (windmill == null)
         {
@@ -90,7 +93,7 @@ public class WindmillController : MonoBehaviour
         if (windmill.currentFlourCount != 0)
         {
             var snapZone = flourSnapZone.GetComponent<SnapZone>();
-            GameObject item = InstantiateItem("Flour");
+            GameObject item = InstantiateItemNew(flour.prefab);
             flourSnapZone.SetActive(true);
             snapZone.GrabGrabbable(item.GetComponent<Grabbable>());
             snapZone.HeldItem.GetComponent<ItemStack>().SetStackSize(windmill.currentFlourCount);
@@ -121,7 +124,7 @@ public class WindmillController : MonoBehaviour
         saveableWindmill.currentWheatCount = currentWheatCount;
         saveableWindmill.currentFlourCount = getCurrentFlourCount();
 
-        GameState.windmill = saveableWindmill;
+        GameState.Instance.windmill = saveableWindmill;
     }
 
     int getCurrentFlourCount()
@@ -133,5 +136,11 @@ public class WindmillController : MonoBehaviour
         }
 
         return snapZone.HeldItem.GetComponent<ItemStack>().GetStackSize();
+    }
+
+    protected void beforeSceneSwitch(object sender, EventArgs e)
+    {
+        SceneSwitcher.Instance.beforeSceneSwitch -= beforeSceneSwitch;
+        SaveWindmill();
     }
 }

@@ -76,7 +76,7 @@ public class ContractSlotsController : MonoBehaviour
             }
 
             Requirement requirementInSlot = new Requirement();
-            requirementInSlot.item = snapZone.HeldItem.GetComponent<ItemInformation>().getItem();
+            requirementInSlot.item = Definitions.GetItemFromObject(snapZone.HeldItem);
 
             requirementInSlot.amount = 1;
             if (heldItem.GetComponent<ItemStack>() && heldItem.GetComponent<ItemStack>().GetStackSize() > 1)
@@ -130,7 +130,7 @@ public class ContractSlotsController : MonoBehaviour
 
         if (contractsDetailPage.GetContract().rewardGold > 1)
         {
-            GameState.IncreaseMoneyByAmount(contractsDetailPage.GetContract().rewardGold);
+            GameState.Instance.IncreaseMoneyByAmount(contractsDetailPage.GetContract().rewardGold);
             AudioManager.Instance.PlayClip("sell");
             finishText.ResetText("You've gained " + contractsDetailPage.GetContract().rewardGold + " gold");
             finishText.gameObject.SetActive(true);
@@ -158,7 +158,7 @@ public class ContractSlotsController : MonoBehaviour
     private void RemoveContractFromWeeklyContracts()
     {
         var currentContract = contractsDetailPage.GetContract();
-        GameState.contractsOfTheWeek.currentContracts.Remove(currentContract);
+        GameState.Instance.contractsOfTheWeek.currentContracts.Remove(currentContract);
     }
 
     void DisableMoneyGainedText()

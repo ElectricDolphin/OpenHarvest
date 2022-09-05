@@ -10,8 +10,7 @@ public class QuestShellFinder : QuestOption
     private int minimumNumberOfSeaStar = 10;
 
     public QuestDialogueController questDialogueController;
-
-    private string RewardItemId = "HatSea";
+    public HarvestDataTypes.Item rewardItem;
 
     void Start()
     {
@@ -22,9 +21,9 @@ public class QuestShellFinder : QuestOption
 
     private void handleNPCGaveItem(object sender, Grabbable grabbable)
     {
-        var itemInfo = grabbable.GetComponent<ItemInformation>();
+        var item = Definitions.GetItemFromObject(grabbable);
 
-        if (!itemInfo || itemInfo.getItemId() != RewardItemId)
+        if (!item || item.itemId != rewardItem.itemId)
         {
             return;
         }
@@ -35,9 +34,11 @@ public class QuestShellFinder : QuestOption
 
     private void handleNPCGrabbedItem(object sender, Grabbable grabbable)
     {
-        if (GameState.questList[questId].currentDialogue == 1)
+        if (GameState.Instance.questList[questId].currentDialogue == 1)
         {
-            if (grabbable.GetComponent<ItemInformation>().getItemId() != "SeaShell1")
+            var item = Definitions.GetItemFromObject(grabbable);
+
+            if (item.itemId != "SeaShell1")
             {
                 return;
             }
@@ -66,9 +67,11 @@ public class QuestShellFinder : QuestOption
             return;
         }
 
-        if (GameState.questList[questId].currentDialogue == 2)
+        if (GameState.Instance.questList[questId].currentDialogue == 2)
         {
-            if (grabbable.GetComponent<ItemInformation>().getItemId() != "SeaShell2")
+            var item = Definitions.GetItemFromObject(grabbable);
+
+            if (item.itemId != "SeaShell2")
             {
                 return;
             }
@@ -97,9 +100,11 @@ public class QuestShellFinder : QuestOption
             return;
         }
 
-        if (GameState.questList[questId].currentDialogue == 3)
+        if (GameState.Instance.questList[questId].currentDialogue == 3)
         {
-            if (grabbable.GetComponent<ItemInformation>().getItemId() != "SeaStar")
+            var item = Definitions.GetItemFromObject(grabbable);
+
+            if (item.itemId != "SeaStar")
             {
                 return;
             }
@@ -144,25 +149,25 @@ public class QuestShellFinder : QuestOption
 
     public void CheckStatus()
     {
-        if (GameState.questList[questId].currentProgress != Progress.InProgress)
+        if (GameState.Instance.questList[questId].currentProgress != Progress.InProgress)
         {
             return;
         }
 
-        if (GameState.questList[questId].currentDialogue == 1)
+        if (GameState.Instance.questList[questId].currentDialogue == 1)
         {
             npc.HoldOutHand();
         }
 
-        if (GameState.questList[questId].currentDialogue == 2)
+        if (GameState.Instance.questList[questId].currentDialogue == 2)
         {
             npc.HoldOutHand();
         }
 
-        if (GameState.questList[questId].currentDialogue == 3)
+        if (GameState.Instance.questList[questId].currentDialogue == 3)
         {
             npc.HoldOutHand();
-            npc.SpawnQuestReward(RewardItemId);
+            npc.SpawnQuestReward(rewardItem);
         }
     }
 
@@ -171,6 +176,6 @@ public class QuestShellFinder : QuestOption
         GeneralQuestController.Instance.UpdateQuest();
         questDialogueController.SetCurrentQuestDialog(3);
 
-        npc.SpawnQuestReward(RewardItemId);
+        npc.SpawnQuestReward(rewardItem);
     }
 }
